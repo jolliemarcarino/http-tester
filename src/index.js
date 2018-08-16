@@ -15,8 +15,6 @@ class Tester extends React.Component {
 	/**
 	 * Method: GET
 	 * 
-	 * id			- The todo ID.
-	 * 
 	 * Response: [{ ... }, ... , { ... }] - An array of todo objects.
 	 */
 	getTodos() {
@@ -37,8 +35,8 @@ class Tester extends React.Component {
 	/**
 	 * Method: POST
 	 * 
-	 * description	- Optional. The todo description.
-	 * assignee		- Optional. The todo assignee.
+	 * description	- Required. The todo description.
+	 * assignee		- Required. The todo assignee.
 	 * 
 	 * Response: { ... } - The todo object.
 	 */
