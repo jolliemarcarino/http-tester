@@ -2,14 +2,22 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-import Request from 'request';		// NPM: https://www.npmjs.com/package/request
+import request from 'request';		// NPM: https://www.npmjs.com/package/request
 
 class Tester extends React.Component {
+	state = {
+		url: 'http://rest-tester.ap-northeast-1.elasticbeanstalk.com/api/v1/todo'
+	}
 
-	constructor(props) {
-		super(props);
+	handleResponse = (error, response, body) => {
+		// Print the error if one occurred
+		console.log('error:', error); 
 
-		this.state = { url	: '' };
+		// Print the response status code if a response was received
+		console.log('statusCode:', response && response.statusCode); 
+
+		// Print the response body
+		console.log('body:', body); 
 	}
 
 	/**
@@ -17,8 +25,11 @@ class Tester extends React.Component {
 	 * 
 	 * Response: [{ ... }, ... , { ... }] - An array of todo objects.
 	 */
-	getTodos() {
-		
+	getTodos = () => {
+		const { url } = this.state;
+		console.log(`getTodos`);
+
+		request(url, this.handleResponse);
 	}
 
 	/**
@@ -28,8 +39,11 @@ class Tester extends React.Component {
 	 * 
 	 * Response: { ... } - The todo object.
 	 */
-	getTodo(id) {
-		
+	getTodo = (id) => {
+		const { url } = this.state;
+		console.log(`>> getTodo/?id=${id}`);
+
+		request(url.concat(`?id=${id}`), this.handleResponse);
 	}
 
 	/**
@@ -41,7 +55,11 @@ class Tester extends React.Component {
 	 * Response: { ... } - The todo object.
 	 */
 	addTodo(description, assignee) {
+		const { url } = this.state;
+		console.log(`>> addTodo`);
 		
+		const body = { description, assignee };
+		request.post(url, { form: body }, this.handleResponse);
 	}
 
 	/**
@@ -56,6 +74,11 @@ class Tester extends React.Component {
 	 */
 	updateTodo(id) {
 		// update the status to 'completed'
+		const { url } = this.state;
+		console.log(`>> updateTodo`);
+
+		const body = { id, description: 'yoga was here', status: 'completed' };
+		request.patch(url, { form: body }, this.handleResponse);
 	}
 
 	/**
@@ -67,7 +90,10 @@ class Tester extends React.Component {
 	 * Response: { deleted : true } - If successfully deleted.
 	 */
 	deleteTodo(id) {
-		
+		const { url } = this.state;
+		console.log(`>> deleteTodo`);
+
+		request.del(url.concat(`?id=${id}`), this.handleResponse);
 	}
 
 	render() {
@@ -78,7 +104,7 @@ class Tester extends React.Component {
 		this.getTodo('5b72756cc370c209c9e4635f');
 
 		// Create todo. You can change the values.
-		this.addTodo("Added todo", "Test User");
+		this.addTodo("Lontong", "Kuda");
 
 		// Update todo. You can change the ID.
 		this.updateTodo('5b72756cc370c209c9e4635f');
